@@ -60,7 +60,7 @@ Resources:
   S3Bucket:
     Type: "AWS::S3::Bucket"
     Properties:
-      BucketName: 'my-app-bucket-20242012' # バケット名を指定
+      BucketName: !Ref BucketName # バケット名を指定
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

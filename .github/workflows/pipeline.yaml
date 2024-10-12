@@ -21,8 +21,9 @@ env:
   PROD_STACK_NAME: production-stack
   PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::746669236371:role/aws-sam-cli-managed-prod-pipe-PipelineExecutionRole-sLmwZYPU8kOf
   PROD_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::746669236371:role/aws-sam-cli-managed-prod--CloudFormationExecutionRo-Fobuax10sSsS
-  PROD_ARTIFACTS_BUCKET: aws-sam-cli-managed-prod-pipeline--artifactsbucket-otv5ikw8xdex
   PROD_REGION: ap-northeast-1
+  TESTING_ARTIFACTS_BUCKET: aws-sam-cli-managed-dev-artifactsbucket-241012
+  PROD_ARTIFACTS_BUCKET: aws-sam-cli-managed-prod-pipeline--artifactsbucket-otv5ikw8xdex
 
 jobs:
   test:
@@ -150,6 +151,8 @@ jobs:
             --capabilities CAPABILITY_IAM \
             --region ${TESTING_REGION} \
             --no-fail-on-empty-changeset \
+            --parameter-overrides BucketName=my-app-bucket-dev \
+            --s3-bucket ${TESTING_ARTIFACTS_BUCKET} \
             --parameter-overrides ChannelAccessToken=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }} \
             --no-confirm-changeset \
             --role-arn ${TESTING_CLOUDFORMATION_EXECUTION_ROLE}
@@ -194,6 +197,7 @@ jobs:
             --capabilities CAPABILITY_IAM \
             --region ${PROD_REGION} \
             --parameter-overrides ChannelAccessToken=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }} \
+            --parameter-overrides BucketName=my-app-bucket-prod \
             --s3-bucket ${PROD_ARTIFACTS_BUCKET} \
             --no-fail-on-empty-changeset \
             --no-confirm-changeset \
