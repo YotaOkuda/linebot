@@ -193,6 +193,7 @@ jobs:
             --template packaged-prod.yaml \
             --capabilities CAPABILITY_IAM \
             --region ${PROD_REGION} \
+            --parameter-overrides ChannelAccessToken=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }} \
             --s3-bucket ${PROD_ARTIFACTS_BUCKET} \
             --no-fail-on-empty-changeset \
             --no-confirm-changeset \
