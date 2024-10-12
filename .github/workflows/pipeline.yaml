@@ -150,6 +150,7 @@ jobs:
             --capabilities CAPABILITY_IAM \
             --region ${TESTING_REGION} \
             --no-fail-on-empty-changeset \
+            --parameter-overrides ChannelAccessToken=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }} \
             --no-confirm-changeset \
             --role-arn ${TESTING_CLOUDFORMATION_EXECUTION_ROLE}
 
