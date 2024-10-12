@@ -150,7 +150,7 @@ jobs:
             --capabilities CAPABILITY_IAM \
             --region ${TESTING_REGION} \
             --no-fail-on-empty-changeset \
-            --parameter-overrides BucketName=my-app-bucket-dev ChannelAccessToken=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }} CreateNewBucket=false \
+            --parameter-overrides BucketName=my-app-bucket-dev ChannelAccessToken=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}  \
             --s3-bucket ${TESTING_ARTIFACTS_BUCKET} \
             --no-confirm-changeset \
             --role-arn ${TESTING_CLOUDFORMATION_EXECUTION_ROLE}
