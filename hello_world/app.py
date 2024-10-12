@@ -1,42 +1,71 @@
 import json
+import os
+import urllib.request
+import logging
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
-# import requests
+LINE_CHANNEL_ACCESS_TOKEN = os.environ['LINE_CHANNEL_ACCESS_TOKEN']
 
+REQUEST_URL = 'https://api.line.me/v2/bot/message/reply'
+REQUEST_METHOD = 'POST'
+REQUEST_HEADERS = {
+    'Authorization': 'Bearer ' + LINE_CHANNEL_ACCESS_TOKEN,
+    'Content-Type': 'application/json'
+}
+REQUEST_MESSAGE = [
+    {
+        'type': 'text',
+        'text': 'はろはろ'
+    }
+]
 
 def lambda_handler(event, context):
-    """Sample pure Lambda function
+    logger.info(event)
 
-    Parameters
-    ----------
-    event: dict, required
-        API Gateway Lambda Proxy Input Format
+    # event に 'body' があるか確認し、なければそのまま処理を終了
+    if 'body' not in event:
+        logger.error("No 'body' in event")
+        return {
+            'statusCode': 400,
+            'body': json.dumps('Invalid request: No body found')
+        }
 
-        Event doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format
+    # リクエストの body をパース
+    try:
+        body = json.loads(event['body'])
+        reply_token = body['events'][0]['replyToken']
+    except (KeyError, json.JSONDecodeError) as e:
+        logger.error(f"Error parsing event body: {str(e)}")
+        return {
+            'statusCode': 400,
+            'body': json.dumps('Invalid request: Failed to parse body')
+        }
 
-    context: object, required
-        Lambda Context runtime methods and attributes
-
-        Context doc: https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html
-
-    Returns
-    ------
-    API Gateway Lambda Proxy Output Format: dict
-
-        Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
-    """
-
-    # try:
-    #     ip = requests.get("http://checkip.amazonaws.com/")
-    # except requests.RequestException as e:
-    #     # Send some context about this error to Lambda Logs
-    #     print(e)
-
-    #     raise e
-
-    return {
-        "statusCode": 200,
-        "body": json.dumps({
-            "message": "hello world",
-            # "location": ip.text.replace("\n", "")
-        }),
+    # LINE API へのリクエストパラメータを設定
+    params = {
+        'replyToken': reply_token,
+        'messages': REQUEST_MESSAGE
     }
+
+    # LINE API へのリクエストを送信
+    request = urllib.request.Request(
+        REQUEST_URL,
+        json.dumps(params).encode('utf-8'),
+        method=REQUEST_METHOD,
+        headers=REQUEST_HEADERS
+    )
+
+    try:
+        response = urllib.request.urlopen(request, timeout=10)
+        logger.info(f"Response status: {response.status}")
+        return {
+            'statusCode': 200,
+            'body': json.dumps('Success')
+        }
+    except Exception as e:
+        logger.error(f"Error sending reply to LINE: {str(e)}")
+        return {
+            'statusCode': 500,
+            'body': json.dumps('Failed to send reply to LINE')
+        }
