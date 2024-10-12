@@ -26,6 +26,36 @@ Resources:
           Properties:
             Path: /hello
             Method: get
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref S3Bucket # LambdaにS3バケット名を渡す環境変数
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Ref S3Bucket
+
+  ImageUploadFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: hello_world.image_s3_handler.lambda_handler  # 新しいLambda関数
+      Runtime: python3.8
+      Environment:
+        Variables:
+          CHANNEL_ACCESS_TOKEN: !Ref ChannelAccessToken
+          BUCKET_NAME: !Ref S3Bucket
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Ref S3Bucket
+      Events:
+        LineWebhook:
+          Type: Api
+          Properties:
+            Path: /linewebhook
+            Method: post
+
+  S3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: <save_image> # バケット名を指定
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
