@@ -17,6 +17,17 @@ Parameters:
   BucketName:
     Type: String
     Description: "The name of the S3 bucket where images will be stored"
+    Default: ""  # デフォルトは空文字列にして、既存バケットが指定されていない場合は新しく作成
+  CreateNewBucket:
+    Type: String
+    AllowedValues:
+      - "true"
+      - "false"
+    Default: "false"  # デフォルトでは新しいバケットは作成しない
+  
+  Conditions:
+  CreateS3Bucket: !Equals [!Ref CreateNewBucket, "true"]  # 新しいバケットを作成するかどうかを判定
+
 
 Resources:
   HelloWorldFunction:
@@ -58,6 +69,14 @@ Resources:
           Properties:
             Path: /linewebhook
             Method: post
+  
+    S3Bucket:
+      Type: AWS::S3::Bucket
+      Condition: CreateS3Bucket  # このバケットは新しいバケット作成が必要な場合のみ作成される
+      Properties:
+        BucketName: !Ref BucketName
+      DeletionPolicy: Retain  # バケットを削除しない
+
 
 Outputs:
   HelloWorldApi:
