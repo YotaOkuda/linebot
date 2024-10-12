@@ -22,7 +22,6 @@ env:
   PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::746669236371:role/aws-sam-cli-managed-prod-pipe-PipelineExecutionRole-sLmwZYPU8kOf
   PROD_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::746669236371:role/aws-sam-cli-managed-prod--CloudFormationExecutionRo-Fobuax10sSsS
   PROD_REGION: ap-northeast-1
-  TESTING_ARTIFACTS_BUCKET: aws-sam-cli-managed-dev-artifactsbucket-241012
   PROD_ARTIFACTS_BUCKET: aws-sam-cli-managed-prod-pipeline--artifactsbucket-otv5ikw8xdex
 
 jobs:
