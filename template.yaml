@@ -70,15 +70,15 @@ Resources:
             Path: /linewebhook
             Method: post
   
-    S3Bucket:
-      Type: AWS::S3::Bucket
-      Condition: CreateS3Bucket  # このバケットは新しいバケット作成が必要な場合のみ作成される
-      Properties:
-        BucketName: !If 
-        - CreateS3Bucket
-        - !Ref BucketName
-        - !Ref AWS::NoValue  # 既存バケットがない場合はデフォルトのバケット名が使われる
-      DeletionPolicy: Retain  # バケットを削除しない
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Condition: CreateS3Bucket  # このバケットは新しいバケット作成が必要な場合のみ作成される
+    Properties:
+      BucketName: !If 
+      - CreateS3Bucket
+      - !Ref BucketName
+      - !Ref AWS::NoValue  # 既存バケットがない場合はデフォルトのバケット名が使われる
+    DeletionPolicy: Retain  # バケットを削除しない
 
 
 Outputs:
