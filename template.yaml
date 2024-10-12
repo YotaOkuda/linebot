@@ -25,9 +25,9 @@ Parameters:
       - "false"
     Default: "false"  # デフォルトでは新しいバケットは作成しない
   
-  Conditions:
-  CreateS3Bucket: !Equals [!Ref CreateNewBucket, "true"]  # 新しいバケットを作成するかどうかを判定
-
+Conditions:
+  CreateS3Bucket:
+    Fn::Equals: [!Ref CreateNewBucket, "true"]  # 新しいバケットを作成するかどうかを判定
 
 Resources:
   HelloWorldFunction:
