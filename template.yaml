@@ -15,6 +15,10 @@ Parameters:
   ChannelAccessToken:
     Type: String
     Description: "The access token for the LINE Messaging API"
+  BucketName:  # バケット名のパラメータを追加
+    Type: String
+    Description: "The name of the S3 bucket where images will be stored"
+
 
 Resources:
   HelloWorldFunction:
